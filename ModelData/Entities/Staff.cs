@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ModelData.Model
 {
-    public class Boss
+    public class Staff
     {
         public int Id { get; set; }
         [Column(TypeName = "varchar(50)")]
@@ -18,14 +18,17 @@ namespace ModelData.Model
         public string? Patronymic { get; set; }
         [Column(TypeName = "varchar(150)")]
         public string? FullName => $"{FirstName} {LastName} {Patronymic}".Trim();
-        public DateOnly? Birthday { get; set; } = null!;
+        public DateOnly? Birthday { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string Mail { get; set; } = null!;
         [Column(TypeName = "varchar(11)")]
-        public string PhoneNumber { get; set; } = null!;
+        public string? PhoneNumber { get; set; }
         [Column(TypeName = "varchar(64)")]
         public string PasswordHash { get; set; } = null!;
-        public List<Staff> Staffs { get; set; } = new();
+        public int BossId { get; set; }
+        public Boss? Boss { get; set; }
+        public int RoleId { get; set; }
+        public Role? Role { get; set; }
         public List<Task> Tasks { get; set; } = new();
         public DateTimeOffset? CreatedDate { get; } = null!;
         public DateTimeOffset? ModifiedDate { get; set; }
