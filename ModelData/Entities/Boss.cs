@@ -26,7 +26,7 @@ namespace ModelData.Model
         [Column(TypeName = "varchar(64)")]
         public string PasswordHash { get; set; } = null!;
         public List<Staff> Staffs { get; set; } = new();
-        public List<Task> Tasks { get; set; } = new();
+        public List<TaskItem> Tasks { get; set; } = new();
         public DateTimeOffset? CreatedDate { get; } = null!;
         public DateTimeOffset? ModifiedDate { get; set; }
     }

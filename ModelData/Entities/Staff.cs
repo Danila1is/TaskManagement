@@ -29,7 +29,7 @@ namespace ModelData.Model
         public Boss? Boss { get; set; }
         public int RoleId { get; set; }
         public Role? Role { get; set; }
-        public List<Task> Tasks { get; set; } = new();
+        public List<TaskItem> Tasks { get; set; } = new();
         public DateTimeOffset? CreatedDate { get; } = null!;
         public DateTimeOffset? ModifiedDate { get; set; }
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ModelData.Model
 {
-    public class Task
+    public class TaskItem
     {
         public int Id { get; set; }
         [Column(TypeName = "text")]

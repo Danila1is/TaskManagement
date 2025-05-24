@@ -13,7 +13,7 @@ namespace ModelData.Context
         public DbSet<Boss> Bosses { get; set; } = null!;
         public DbSet<Staff> Staffs { get; set; } = null!;
         public DbSet<Role> Roles { get; set; } = null!;
-        public DbSet<ModelData.Model.Task> Tasks { get; set; } = null!;
+        public DbSet<TaskItem> Tasks { get; set; } = null!;
 
         public DataContext(DbContextOptions<DataContext> options) 
             : base(options)
@@ -47,11 +47,11 @@ namespace ModelData.Context
                 .Property(e => e.ModifiedDate)
                 .HasDefaultValueSql("NOW()");
 
-            modelBuilder.Entity<ModelData.Model.Task>()
+            modelBuilder.Entity<TaskItem>()
                 .Property(e => e.CreatedDate)
                 .HasDefaultValueSql("NOW()");
 
-            modelBuilder.Entity<ModelData.Model.Task>()
+            modelBuilder.Entity<TaskItem>()
                 .Property(e => e.ModifiedDate)
                 .HasDefaultValueSql("NOW()");
 

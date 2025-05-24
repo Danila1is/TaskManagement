@@ -24,39 +24,31 @@ namespace TaskManagement.Data.Repositories
             return true;
         }
 
-        public async Task<Boss> GetByIdAsync(int bossId)
+        public async Task<Boss> GetByIdAsync(int id)
         {
             var boss = await _dataContext.Bosses.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == bossId) ?? throw new Exception("Пользователь не найден");
+                .FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("Пользователь не найден");
 
             return boss;
         }
 
-        public async Task<Boss> GetByMailAsync(string bossMail)
-        {
-            var boss = await _dataContext.Bosses.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Mail == bossMail) ?? throw new Exception("Пользователь не найден");
-
-            return boss;
-        }
-
-        public async Task<bool> Update(Boss entity)
+        public async Task<bool> UpdateAsync(Boss entity)
         {
             var bossEntity = await _dataContext.Bosses.FirstOrDefaultAsync(x => x.Id == entity.Id)
                 ?? throw new Exception("Пользователь не найден");
 
             _dataContext.Entry(bossEntity).CurrentValues.SetValues(entity);
-            _dataContext.SaveChanges();
+            await _dataContext.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> Delete(Boss entity)
+        public async Task<bool> DeleteAsync(Boss entity)
         {
             var bossEntity = await _dataContext.Bosses.FirstOrDefaultAsync(x => x.Id == entity.Id)
                 ?? throw new Exception("Пользователь не найден");
 
             _dataContext.Remove(bossEntity);
-            _dataContext.SaveChanges();
+            await _dataContext.SaveChangesAsync();
             return true;
         }
 
@@ -69,13 +61,21 @@ namespace TaskManagement.Data.Repositories
             return staff;
         }
 
-        public async Task<IEnumerable<ModelData.Model.Task>> GetTasksAsync(int bossId)
+        public async Task<IEnumerable<TaskItem>> GetTasksAsync(int bossId)
         {
             var tasks = await _dataContext.Tasks.Where(x => x.BossId == bossId)
                 .AsNoTracking()
                 .ToListAsync();
 
             return tasks;
+        }
+
+        public async Task<Boss> GetByMailAsync(string mail)
+        {
+            var boss = await _dataContext.Bosses.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Mail == mail) ?? throw new Exception("Пользователь не найден");
+
+            return boss;
         }
     }
 }
