@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagement.Core.Models;
 
 namespace TaskManagement.Data.Repositories
 {
-    public class TaskItemRepository
+    public class TaskItemRepository : ITaskItemRepository
     {
         private readonly DataContext _dataContext;
 
@@ -19,54 +20,53 @@ namespace TaskManagement.Data.Repositories
             _dataContext = dataContext;
         }
 
-        public async Task<bool> CreateAsync(TaskItem entity)
+        public async Task<bool> CreateAsync(TaskItemModel taskItem)
         {
-            await _dataContext.AddAsync(entity);
-            await _dataContext.SaveChangesAsync();
+            var taskItemEmtity = new TaskItem
+            {
+                Id = taskItem.Id,
+                Description = taskItem.Description,
+                Status = taskItem.Status,
+                DateStart = taskItem.DateStart,
+                DateEnd = taskItem.DateEnd,
+                DateDone = taskItem.DateDone,
+                Reply = taskItem.Reply,
+            };
+
             return true;
         }
 
-        public async Task<TaskItem> GetAsync(int id)
+        public async Task<TaskItemModel> GetAsync(int id)
         {
-            var taskItem = await _dataContext.Tasks.AsNoTracking()
+            var entity = await _dataContext.Tasks.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("Таких задач нет");
+
+            TaskItemModel taskItem = TaskItemModel.Create(entity.Id, entity.Description, entity.Status, entity.DateStart, entity.DateEnd
+                , entity.DateDone, entity.Reply).TaskItemModel;
+
             return taskItem;
         }
 
-        public async Task<bool> UpdateAsync(TaskItem entity)
+        public async Task<bool> UpdateAsync(TaskItemModel taskItem)
         {
-            var taskItem = await _dataContext.Tasks
-                .FirstOrDefaultAsync(x => x.Id == entity.Id) ?? throw new Exception("Таких задач нет");
+            await _dataContext.Tasks.Where(x => x.Id == taskItem.Id)
+                .ExecuteUpdateAsync(s => s
+                .SetProperty(d => d.Description, d => taskItem.Description)
+                .SetProperty(s => s.Status, s => taskItem.Status)
+                .SetProperty(d => d.DateStart, d => taskItem.DateStart)
+                .SetProperty(d => d.DateEnd, d => taskItem.DateEnd)
+                .SetProperty(d => d.DateDone, d => taskItem.DateDone)
+                .SetProperty(d => d.Reply, d => taskItem.Reply));
 
-            _dataContext.Entry(taskItem).CurrentValues.SetValues(entity);
-            await _dataContext.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> DeleteAsync(TaskItem entity)
+        public async Task<bool> DeleteAsync(TaskItemModel taskItem)
         {
-            var task = await _dataContext.Tasks
-                .FirstOrDefaultAsync(x => x.Id == entity.Id) ?? throw new Exception("Такой задачи нет");
+            await _dataContext.Tasks.Where(x => x.Id == taskItem.Id)
+                .ExecuteDeleteAsync();
 
-            _dataContext.Remove(task);
-            await _dataContext.SaveChangesAsync();
             return true;
-        }
-
-        public async Task<Boss> GetBoss(TaskItem entity)
-        {
-            var boss = await _dataContext.Bosses.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == entity.BossId) ?? throw new Exception("Такого пользователя нет");
-            
-            return boss;
-        }
-
-        public async Task<Staff> GetStaff(TaskItem entity)
-        {
-            var staff = await _dataContext.Staffs.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == entity.StaffId) ?? throw new Exception("Такого сотрудника нет");
-
-            return staff;
         }
     }
 }

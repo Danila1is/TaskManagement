@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagement.Core.Models;
 
 namespace TaskManagement.Data.Repositories
 {
-    public class RoleRepository
+    public class RoleRepository : IRoleRepository
     {
         private readonly DataContext _dataContext;
         public RoleRepository(DataContext dataContext)
@@ -17,53 +18,42 @@ namespace TaskManagement.Data.Repositories
             _dataContext = dataContext;
         }
 
-        public async Task<bool> CreateAsync(Role entity)
+        public async Task<bool> CreateAsync(RoleModel role)
         {
-            await _dataContext.AddAsync(entity);
-            await _dataContext.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<Role> GetAsync(int id)
-        {
-            var role = await _dataContext.Roles.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("Такой роли нет");
-            return role;
-        }
-
-        public async Task<bool> UpdateAsync(Role entity)
-        {
-            var role = await _dataContext.Roles
-                .FirstOrDefaultAsync(x => x.Id == entity.Id) ?? throw new Exception("Такой роли нет");
-
-            _dataContext.Entry(role).CurrentValues.SetValues(entity);
-            await _dataContext.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> DeleteAsync(Role entity)
-        {
-            var role = await _dataContext.Roles
-                .FirstOrDefaultAsync(x => x.Id == entity.Id) ?? throw new Exception("Такой роли нет");
-
-            _dataContext.Remove(role);
-            await _dataContext.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<IEnumerable<Staff>> GetStaffByRole(Role roleEntity, Boss bossEntity)
-        {
-            var role = await _dataContext.Roles.AsNoTracking()
-                .Include(x => x.Staffs.Where(x => x.BossId == bossEntity.Id))
-                .Where(x => x.Id == roleEntity.Id)
-                .FirstOrDefaultAsync() ?? throw new Exception("Нет позиций");
-
-            if (role.Staffs is null)
+            Role roleEntity = new Role
             {
-                throw new Exception("Список сотрудников с данной позицией пуст");
-            }
+                Id = role.Id,
+                Name = role.Name,
+            };
 
-            return role.Staffs;
+            await _dataContext.AddAsync(roleEntity);
+            await _dataContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<RoleModel> GetAsync(int id)
+        {
+            var roleEntity = await _dataContext.Roles.Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            RoleModel roleModel = RoleModel.Create(roleEntity.Id, roleEntity.Name).role;
+            return roleModel;
+        }
+
+        public async Task<bool> UpdateAsync(RoleModel role)
+        {
+            await _dataContext.Roles.Where(x => x.Id == role.Id)
+                .ExecuteUpdateAsync(s => s
+                .SetProperty(n => n.Name, n => role.Name));
+
+            return true;
+        }
+
+        public async Task<bool> DeleteAsync(RoleModel role)
+        {
+            await _dataContext.Roles.Where(x => x.Id == role.Id)
+                .ExecuteDeleteAsync();
+
+            return true;
         }
     }
 }

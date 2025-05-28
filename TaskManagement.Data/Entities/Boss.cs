@@ -18,7 +18,7 @@ namespace TaskManagement.Data.Entities
         public string? Patronymic { get; set; }
         [Column(TypeName = "varchar(150)")]
         public string? FullName => $"{FirstName} {LastName} {Patronymic}".Trim();
-        public DateOnly Birthday { get; set; }
+        public DateOnly? Birthday { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string Mail { get; set; } = null!;
         [Column(TypeName = "varchar(11)")]
@@ -27,7 +27,7 @@ namespace TaskManagement.Data.Entities
         public string PasswordHash { get; set; } = null!;
         public List<Staff> Staffs { get; set; } = new();
         public List<TaskItem> Tasks { get; set; } = new();
-        public DateTimeOffset? CreatedDate { get; } = null!;
-        public DateTimeOffset? ModifiedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; }
+        public DateTimeOffset ModifiedDate { get; set; }
     }
 }

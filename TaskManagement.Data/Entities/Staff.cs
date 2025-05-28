@@ -30,7 +30,7 @@ namespace TaskManagement.Data.Entities
         public int RoleId { get; set; }
         public Role? Role { get; set; }
         public List<TaskItem> Tasks { get; set; } = new();
-        public DateTimeOffset? CreatedDate { get; } = null!;
-        public DateTimeOffset? ModifiedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; }
+        public DateTimeOffset ModifiedDate { get; set; }
     }
 }

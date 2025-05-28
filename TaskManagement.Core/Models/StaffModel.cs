@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TaskManagement.Core.Models
 {
-    public class BossModel
+    public class StaffModel
     {
-        private BossModel(int id,string firstName, string lastName, string mail, string passwordHash, 
+        private StaffModel(int id, string firstName, string lastName, string mail, string passwordHash,
             string? phoneNumber = null, string? patronymic = null, DateOnly? birthday = null)
         {
             Id = id;
@@ -22,11 +21,12 @@ namespace TaskManagement.Core.Models
             PhoneNumber = phoneNumber;
             PasswordHash = passwordHash;
         }
+
         [Required]
         public int Id { get; set; }
         [Required]
         [StringLength(50, MinimumLength = 1)]
-        public string FirstName { get;}
+        public string FirstName { get; }
         [Required]
         [StringLength(50, MinimumLength = 1)]
         public string LastName { get; }
@@ -41,19 +41,19 @@ namespace TaskManagement.Core.Models
         public string? PhoneNumber { get; }
         [Required]
         [StringLength(64, MinimumLength = 64)]
-        public string PasswordHash { get; } 
+        public string PasswordHash { get; }
 
-        public static (BossModel boss, List<ValidationResult> errors) Create(int id, string firstName, string lastName,
+        public static (StaffModel staff, List<ValidationResult> errors) Create(int id, string firstName, string lastName,
             string mail, string passwordHash, string? phoneNumber = null, string? patronymic = null, DateOnly? birthday = null)
         {
             List<ValidationResult> errors = new List<ValidationResult>();
-            var boss = new BossModel(id, firstName, lastName, mail, passwordHash, 
+            var staff = new StaffModel(id, firstName, lastName, mail, passwordHash,
                 phoneNumber, patronymic, birthday);
-            var contextValidation = new ValidationContext(boss);
+            var contextValidation = new ValidationContext(staff);
 
-            Validator.TryValidateObject(boss, contextValidation, errors);
+            Validator.TryValidateObject(staff, contextValidation, errors);
 
-            return (boss, errors);
+            return (staff, errors);
         }
     }
 }
