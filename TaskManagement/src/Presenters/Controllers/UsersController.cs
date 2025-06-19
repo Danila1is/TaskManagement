@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Users;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +14,29 @@ namespace Presenters.Controllers
     [Route("[controller]")]
     public class UsersController: ControllerBase
     {
+        private readonly IUsersService _usersService;
+
+        public UsersController(IUsersService usersService)
+        {
+            _usersService = usersService;
+        }
+
         [HttpPost("registration")]
         public async Task<IActionResult> Registration([FromBody] RegistrationRequest registrationRequest)
         {
-            return Ok("User created");
+            try
+            {
+                Guid id = await _usersService.Registration(registrationRequest);
+                return Ok($"{id}");
+            }
+            catch (ValidationException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost("login")]

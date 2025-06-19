@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace TaskManagement.Contracts.Users
 {
-    public record RegistrationRequest(string FirstName, string LastName, string Mail, string password);
+    public record RegistrationRequest(string FirstName, string LastName, string Mail, string Password);
 }
