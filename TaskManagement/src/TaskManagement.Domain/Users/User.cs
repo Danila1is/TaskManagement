@@ -9,7 +9,7 @@ namespace TaskManagement.Domain.Users
 {
     public class User
     {
-        Guid Guid { get; set; }
+        public Guid Id { get; set; }
 
         public required string FirstName { get; set; }
 
@@ -17,7 +17,7 @@ namespace TaskManagement.Domain.Users
 
         public string? Patronymic { get; set; }
 
-        public DateOnly Birthday { get; set; }
+        public DateOnly? Birthday { get; set; }
 
         public required string Email { get; set; } 
 
