@@ -12,6 +12,12 @@ namespace Application.Users
     {
         public Task<Guid> AddAsync(User user);
 
-        public Task<bool> CheckEmailAsync(string email);
+        public Task<User> GetByEmailAsync(string email);
+
+        public Task<bool> Login(string email, string hashPassword);
+
+        public Task<User> GetById(Guid id);
+
+        public Task<Guid> UpdateAsync(User user);
     }
 }

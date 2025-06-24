@@ -13,11 +13,15 @@ namespace Application.Users
     {
         private readonly IUsersRepository _usersRepository;
         private readonly IValidator<RegistrationRequest> _validator;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public UsersService(IUsersRepository usersRepository, IValidator<RegistrationRequest> validator)
+        public UsersService(IUsersRepository usersRepository, 
+            IValidator<RegistrationRequest> validator,
+            IPasswordHasher passwordHasher)
         {
             _usersRepository = usersRepository;
             _validator = validator;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<Guid> Registration(RegistrationRequest registrationRequest)
@@ -29,25 +33,23 @@ namespace Application.Users
                 throw new ValidationException(validatorResult.Errors);
             }
 
-            if (!await _usersRepository.CheckEmailAsync(registrationRequest.Mail))
+            if (await _usersRepository.GetByEmailAsync(registrationRequest.Mail) is not null)
             {
                 throw new Exception("Такая почта уже зарегистрирована");
             }
 
-            // Нужно добавить хэширование пароля
-
-            Guid id = Guid.NewGuid();
+            string hashedPassword = _passwordHasher.HashPassword(registrationRequest.Password);
 
             var user = new User
             {
-                Id = id,
+                Id = new Guid(),
                 FirstName = registrationRequest.FirstName,
                 LastName = registrationRequest.LastName,
                 Email = registrationRequest.Mail,
-                PasswordHash = registrationRequest.Password,
+                PasswordHash = hashedPassword,
             };
 
-            await _usersRepository.AddAsync(user);
+            Guid id = await _usersRepository.AddAsync(user);
 
             return id;
         }

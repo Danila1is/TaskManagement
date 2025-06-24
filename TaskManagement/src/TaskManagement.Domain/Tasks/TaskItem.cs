@@ -14,9 +14,9 @@ namespace TaskManagement.Domain.Tasks
 
         public required string Description { get; set; }
 
-        public required string Status { get; set; }
+        public required Status Status { get; set; }
 
-        public required string Priority { get; set; }
+        public required Priority Priority { get; set; }
 
         public List<string> Attachments { get; set; } = [];
 
@@ -31,5 +31,7 @@ namespace TaskManagement.Domain.Tasks
         public required Guid AuthorId { get; set; }
 
         public required Guid AssigneeId { get; set; }
+
+        public List<TaskDelivery> TaskDeliveries { get; set; } = [];
     }
 }

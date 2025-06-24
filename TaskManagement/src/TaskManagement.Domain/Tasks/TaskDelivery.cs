@@ -10,7 +10,11 @@ namespace TaskManagement.Domain.Tasks
     {
         public Guid Id { get; set; }
 
-        public required Guid TaskItemId { get; set; }
+        public required TaskItem TaskItem { get; set; }
+
+        public Guid? TaskReviewId { get; set; }
+
+        public TaskReview? TaskReview { get; set; }
 
         public required string Comment { get; set; }
 
