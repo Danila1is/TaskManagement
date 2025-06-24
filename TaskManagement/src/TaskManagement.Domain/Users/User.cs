@@ -24,6 +24,7 @@ namespace TaskManagement.Domain.Users
         public string? PhoneNumber { get; set; }
 
         public required string PasswordHash { get; set; }
+
         public List<Guid> Teams { get; set; } = [];
     }
 }

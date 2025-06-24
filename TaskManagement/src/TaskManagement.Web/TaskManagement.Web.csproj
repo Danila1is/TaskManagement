@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.4" />
   </ItemGroup>
 
@@ -16,6 +20,8 @@
     <ProjectReference Include="..\Presenters\Presenters.csproj" />
     <ProjectReference Include="..\TaskManagement.Contracts\TaskManagement.Contracts.csproj" />
     <ProjectReference Include="..\TaskManagement.Domain\TaskManagement.Domain.csproj" />
+    <ProjectReference Include="..\TaskManagement.Infrastructure.BCrypt\TaskManagement.Infrastructure.Hasher.csproj" />
+    <ProjectReference Include="..\TaskManagement.Infrastructure.PostgreSQL\TaskManagement.Infrastructure.PostgreSQL.csproj" />
   </ItemGroup>
 
 </Project>

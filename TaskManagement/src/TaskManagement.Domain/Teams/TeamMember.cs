@@ -12,8 +12,8 @@ namespace TaskManagement.Domain.Teams
 
         public required Guid UserId { get; set; }
 
-        public required Guid TeamId { get; set; }
+        public required Team Team { get; set; }
 
-        public required Guid RoleId { get; set; }
+        public required Role Role { get; set; }
     }
 }

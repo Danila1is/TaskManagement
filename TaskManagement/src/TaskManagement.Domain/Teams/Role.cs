@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TaskManagement.Domain.Roles
+namespace TaskManagement.Domain.Teams
 {
     public class Role
     {
@@ -12,6 +12,10 @@ namespace TaskManagement.Domain.Roles
 
         public required string Name { get; set; }
 
-        public List<Functional> Functionals { get; set; } = [];
+        public List<Function> Functions { get; set; } = [];
+
+        public required Team Team {  get; set; }
+
+        public List<TeamMember> TeamMembers { get; set; } = [];
     }
 }

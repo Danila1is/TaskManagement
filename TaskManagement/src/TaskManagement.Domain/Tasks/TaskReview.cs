@@ -14,8 +14,6 @@ namespace TaskManagement.Domain.Tasks
 
         public List<string> Attachments { get; set; } = [];
 
-        public required string Status { get; set; }
-
         public required TaskDelivery TaskDelivery { get; set; }
 
         public required Guid InspectorId { get; set; }

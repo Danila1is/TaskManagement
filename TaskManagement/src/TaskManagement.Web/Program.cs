@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Builder;
+using TaskManagement.Infrastructure.PostgreSQL;
 
 namespace TaskManagement.Web
 {
@@ -8,8 +9,10 @@ namespace TaskManagement.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var connectionString = builder.Configuration.GetConnectionString(nameof(PostgresqlDbContext))
+                ?? throw new InvalidOperationException("Connection string or DefaultConnection not found");
 
-            builder.Services.AddProgramDependencies();
+            builder.Services.AddProgramDependencies(connectionString);
 
             var app = builder.Build();
 

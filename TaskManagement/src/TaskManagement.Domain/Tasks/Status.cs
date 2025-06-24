@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TaskManagement.Contracts.Users
+namespace TaskManagement.Domain.Tasks
 {
-    public record LoginRequest(string Email, string Password);
+    public enum Status
+    {
+
+    }
 }
