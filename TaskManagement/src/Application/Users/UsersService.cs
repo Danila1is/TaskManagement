@@ -12,21 +12,63 @@ namespace Application.Users
     public class UsersService : IUsersService
     {
         private readonly IUsersRepository _usersRepository;
-        private readonly IValidator<RegistrationRequest> _validator;
+        private readonly IValidator<RegistrationRequest> _validatorRegistration;
+        private readonly IValidator<LoginRequest> _validatorLogin;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IJWTProvider _jwtProvider;
 
         public UsersService(IUsersRepository usersRepository, 
             IValidator<RegistrationRequest> validator,
-            IPasswordHasher passwordHasher)
+            IPasswordHasher passwordHasher,
+            IValidator<LoginRequest> validatorLogin,
+            IJWTProvider jwtProvider)
         {
             _usersRepository = usersRepository;
-            _validator = validator;
+            _validatorRegistration = validator;
             _passwordHasher = passwordHasher;
+            _validatorLogin = validatorLogin;
+            _jwtProvider = jwtProvider;
         }
 
-        public async Task<Guid> Registration(RegistrationRequest registrationRequest)
+        public async Task<string> LoginAsync(LoginRequest loginRequest)
         {
-            var validatorResult = await _validator.ValidateAsync(registrationRequest);
+            // Check email and password
+            var validatorResult = await _validatorLogin.ValidateAsync(loginRequest);
+
+            if (!validatorResult.IsValid)
+            {
+                throw new ValidationException(validatorResult.Errors);
+            }
+
+            var user = await _usersRepository.GetByEmailAsync(loginRequest.Email);
+
+            if (user == null)
+            {
+                throw new Exception("Пользователь не найден!");
+            }
+
+            bool isValidPassword = _passwordHasher.VerifyPassword(loginRequest.Password, user.PasswordHash);
+
+            if (!isValidPassword)
+            {
+                throw new Exception("Неверный пароль!");
+            }
+
+            // create token
+
+            string token = _jwtProvider.GenerateToken(user);
+
+
+            // save token in the cookie
+
+            
+
+            return token;
+        }
+
+        public async Task<Guid> RegistrationAsync(RegistrationRequest registrationRequest)
+        {
+            var validatorResult = await _validatorRegistration.ValidateAsync(registrationRequest);
 
             if (!validatorResult.IsValid)
             {
@@ -35,7 +77,7 @@ namespace Application.Users
 
             if (await _usersRepository.GetByEmailAsync(registrationRequest.Mail) is not null)
             {
-                throw new Exception("Такая почта уже зарегистрирована");
+                throw new Exception("Такой пользователь уже есть");
             }
 
             string hashedPassword = _passwordHasher.HashPassword(registrationRequest.Password);

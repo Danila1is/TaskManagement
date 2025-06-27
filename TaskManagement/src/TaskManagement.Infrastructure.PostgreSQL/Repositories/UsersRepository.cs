@@ -31,7 +31,7 @@ namespace TaskManagement.Infrastructure.PostgreSQL.Repositories
             User? user = await _context.Users
                 .Where(x => x.Email == email)
                 .AsNoTracking()
-                .FirstAsync() ?? null;
+                .FirstOrDefaultAsync();
 
             return user;
         }
