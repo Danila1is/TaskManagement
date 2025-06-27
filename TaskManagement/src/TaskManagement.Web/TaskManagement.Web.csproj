@@ -21,6 +21,7 @@
     <ProjectReference Include="..\TaskManagement.Contracts\TaskManagement.Contracts.csproj" />
     <ProjectReference Include="..\TaskManagement.Domain\TaskManagement.Domain.csproj" />
     <ProjectReference Include="..\TaskManagement.Infrastructure.BCrypt\TaskManagement.Infrastructure.Hasher.csproj" />
+    <ProjectReference Include="..\TaskManagement.Infrastructure.JWT\TaskManagement.Infrastructure.JWT.csproj" />
     <ProjectReference Include="..\TaskManagement.Infrastructure.PostgreSQL\TaskManagement.Infrastructure.PostgreSQL.csproj" />
   </ItemGroup>
 

@@ -12,7 +12,9 @@ namespace TaskManagement.Web
             var connectionString = builder.Configuration.GetConnectionString(nameof(PostgresqlDbContext))
                 ?? throw new InvalidOperationException("Connection string or DefaultConnection not found");
 
-            builder.Services.AddProgramDependencies(connectionString);
+            var configuration = builder.Configuration;
+
+            builder.Services.AddProgramDependencies(connectionString, configuration);
 
             var app = builder.Build();
 
@@ -22,6 +24,8 @@ namespace TaskManagement.Web
                 app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "TaskManagement"));
             }
 
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllers();
 

@@ -1,4 +1,6 @@
 ﻿using Application.Users;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -26,7 +28,7 @@ namespace Presenters.Controllers
         {
             try
             {
-                Guid id = await _usersService.Registration(registrationRequest);
+                Guid id = await _usersService.RegistrationAsync(registrationRequest);
                 return Ok($"{id}");
             }
             catch (ValidationException e)
@@ -42,10 +44,26 @@ namespace Presenters.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            return Ok("User is logging");
+            try
+            {
+                string token = await _usersService.LoginAsync(loginRequest);
+
+                Response.Cookies.Append("jwt-token", token);
+
+                return Ok("Успешный вход");
+            }
+            catch(ValidationException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet("{userId:guid}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] Guid userId)
         {
             return Ok("User is find");
