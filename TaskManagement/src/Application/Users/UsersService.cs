@@ -1,9 +1,12 @@
 ﻿using FluentValidation;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagement.Application.Users.Fails;
+using TaskManagement.Application.Users.Fails.Exceptions;
 using TaskManagement.Contracts.Users;
 using TaskManagement.Domain.Users;
 
@@ -37,21 +40,23 @@ namespace Application.Users
 
             if (!validatorResult.IsValid)
             {
-                throw new ValidationException(validatorResult.Errors);
+                var errors = validatorResult.Errors.Select(x => Error.Validation(x.ErrorCode, x.ErrorMessage, x.PropertyName)).ToArray();
+
+                throw new UserValidationException(errors);
             }
 
             var user = await _usersRepository.GetByEmailAsync(loginRequest.Email);
 
             if (user == null)
             {
-                throw new Exception("Пользователь не найден!");
+                throw new UserNotFoundException([Errors.Users.UserNotFound()]);
             }
 
             bool isValidPassword = _passwordHasher.VerifyPassword(loginRequest.Password, user.PasswordHash);
 
             if (!isValidPassword)
             {
-                throw new Exception("Неверный пароль!");
+                throw new UserIncorrectPasswordException();
             }
 
             // create token
@@ -72,12 +77,13 @@ namespace Application.Users
 
             if (!validatorResult.IsValid)
             {
-                throw new ValidationException(validatorResult.Errors);
+                var errors = validatorResult.Errors.Select(e => Error.Validation(e.ErrorCode, e.ErrorMessage, e.PropertyName)).ToArray();
+                throw new UserValidationException(errors);
             }
 
             if (await _usersRepository.GetByEmailAsync(registrationRequest.Mail) is not null)
             {
-                throw new Exception("Такой пользователь уже есть");
+                throw new UserEmailIsBusyException();
             }
 
             string hashedPassword = _passwordHasher.HashPassword(registrationRequest.Password);

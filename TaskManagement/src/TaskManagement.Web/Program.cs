@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Builder;
 using TaskManagement.Infrastructure.PostgreSQL;
+using TaskManagement.Web.Middlewares;
 
 namespace TaskManagement.Web
 {
@@ -17,6 +18,8 @@ namespace TaskManagement.Web
             builder.Services.AddProgramDependencies(connectionString, configuration);
 
             var app = builder.Build();
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {
