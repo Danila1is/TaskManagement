@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\Presenters\Presenters.csproj" />
+    <ProjectReference Include="..\Application\TaskManagement.Application.csproj" />
+    <ProjectReference Include="..\Presenters\TaskManagement.Presenters.csproj" />
     <ProjectReference Include="..\TaskManagement.Contracts\TaskManagement.Contracts.csproj" />
     <ProjectReference Include="..\TaskManagement.Domain\TaskManagement.Domain.csproj" />
     <ProjectReference Include="..\TaskManagement.Infrastructure.BCrypt\TaskManagement.Infrastructure.Hasher.csproj" />
