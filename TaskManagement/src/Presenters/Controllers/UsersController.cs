@@ -26,19 +26,10 @@ namespace Presenters.Controllers
         [HttpPost("registration")]
         public async Task<IActionResult> Registration([FromBody] RegistrationRequest registrationRequest)
         {
-            try
-            {
-                Guid id = await _usersService.RegistrationAsync(registrationRequest);
-                return Ok($"{id}");
-            }
-            catch (ValidationException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+
+            Guid id = await _usersService.RegistrationAsync(registrationRequest);
+            return Ok($"{id}");
+
         }
 
         [HttpPost("login")]

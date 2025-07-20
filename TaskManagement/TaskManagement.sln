@@ -9,17 +9,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{36D591C7-65C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.Web", "src\TaskManagement.Web\TaskManagement.Web.csproj", "{7DA0512B-E3E7-4B3A-A9FB-8F9A7AFB2C1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presenters", "src\Presenters\Presenters.csproj", "{7A027101-0DCA-4952-A198-44CEC1D44990}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.Presenters", "src\Presenters\TaskManagement.Presenters.csproj", "{7A027101-0DCA-4952-A198-44CEC1D44990}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.Contracts", "src\TaskManagement.Contracts\TaskManagement.Contracts.csproj", "{F221E4F8-D5DB-47B2-9714-76A4B0975BC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{72B8ACF8-9633-4B48-89DB-5A40CF387E22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.Application", "src\Application\TaskManagement.Application.csproj", "{72B8ACF8-9633-4B48-89DB-5A40CF387E22}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.Infrastructure.PostgreSQL", "src\TaskManagement.Infrastructure.PostgreSQL\TaskManagement.Infrastructure.PostgreSQL.csproj", "{D6D16EC8-8B92-4D71-A320-99CD65A69BEF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.Infrastructure.Hasher", "src\TaskManagement.Infrastructure.BCrypt\TaskManagement.Infrastructure.Hasher.csproj", "{5CAFA1E2-043C-4AC5-BC9E-994BBB5F6B75}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.Infrastructure.JWT", "src\TaskManagement.Infrastructure.JWT\TaskManagement.Infrastructure.JWT.csproj", "{C5AD91A6-118C-490A-AD15-B1314594991F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\Shared\Shared.csproj", "{59BFDE56-D53D-4B87-A6A0-1251B4656761}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{C5AD91A6-118C-490A-AD15-B1314594991F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5AD91A6-118C-490A-AD15-B1314594991F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5AD91A6-118C-490A-AD15-B1314594991F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59BFDE56-D53D-4B87-A6A0-1251B4656761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59BFDE56-D53D-4B87-A6A0-1251B4656761}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59BFDE56-D53D-4B87-A6A0-1251B4656761}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59BFDE56-D53D-4B87-A6A0-1251B4656761}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,7 +76,9 @@ Global
 		{F221E4F8-D5DB-47B2-9714-76A4B0975BC7} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{72B8ACF8-9633-4B48-89DB-5A40CF387E22} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{D6D16EC8-8B92-4D71-A320-99CD65A69BEF} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{5CAFA1E2-043C-4AC5-BC9E-994BBB5F6B75} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{C5AD91A6-118C-490A-AD15-B1314594991F} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{59BFDE56-D53D-4B87-A6A0-1251B4656761} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C1BDAF3-06D0-4DEA-96BC-A969A9E7F4FB}
