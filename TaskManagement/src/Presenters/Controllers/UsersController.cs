@@ -1,7 +1,9 @@
 ﻿using Application.Users;
+using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManagement.Contracts.Users;
+using TaskManagement.Presenters.ResponseExtensions;
 
 namespace Presenters.Controllers
 {
@@ -27,30 +30,32 @@ namespace Presenters.Controllers
         public async Task<IActionResult> Registration([FromBody] RegistrationRequest registrationRequest)
         {
 
-            Guid id = await _usersService.RegistrationAsync(registrationRequest);
-            return Ok($"{id}");
+            Result<Guid, Failure> result = await _usersService.RegistrationAsync(registrationRequest);
+
+            if (result.IsFailure)
+            {
+                return result.Error.ToResponse();
+            }
+
+            return Ok($"{result.Value}");
 
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            try
-            {
-                string token = await _usersService.LoginAsync(loginRequest);
+            Result<string, Failure> result = await _usersService.LoginAsync(loginRequest);
 
-                Response.Cookies.Append("jwt-token", token);
+            if (result.IsFailure)
+            {
+                return result.Error.ToResponse();
+            }
 
-                return Ok("Успешный вход");
-            }
-            catch(ValidationException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            string token = result.Value;
+
+            Response.Cookies.Append("jwt-token", token);
+
+            return Ok("Успешный вход");
         }
 
         [HttpGet("{userId:guid}")]
