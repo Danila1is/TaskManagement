@@ -38,6 +38,11 @@ namespace Shared
 
         public static Error Conflict(string? code, string message, string? invalidField = null)
             => new(code ?? "value.is.conflict", message, ErrorType.CONFLICT, invalidField);
+
+        public Failure ToFailure()
+        {
+            return this;
+        }
     }
 
     public enum ErrorType

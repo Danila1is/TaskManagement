@@ -1,5 +1,7 @@
 ﻿using Application.Users;
+using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,22 +20,36 @@ namespace TaskManagement.Infrastructure.PostgreSQL.Repositories
             _context = context;
         }
 
-        public async Task<Guid> AddAsync(User user)
+        public async Task<Result<Guid, Failure>> AddAsync(User user)
         {
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return Error.Failure("add.error", e.Message).ToFailure();
+            }
 
             return user.Id;
         }
 
-        public async Task<User> GetByEmailAsync(string email)
+        public async Task<Result<User?, Failure>> GetByEmailAsync(string email)
         {
-            User? user = await _context.Users
-                .Where(x => x.Email == email)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
+            try
+            {
+                User? user = await _context.Users
+                    .Where(x => x.Email == email)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
 
-            return user;
+                return user;
+            }
+            catch (Exception e)
+            {
+                return Error.Failure("get.by.email.error", e.Message).ToFailure();
+            }
         }
 
         public Task<bool> Login(string email, string hashPassword)

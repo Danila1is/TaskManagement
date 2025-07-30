@@ -1,10 +1,12 @@
-﻿using FluentValidation;
+﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagement.Application.Extensions;
 using TaskManagement.Application.Users.Fails;
 using TaskManagement.Application.Users.Fails.Exceptions;
 using TaskManagement.Contracts.Users;
@@ -33,57 +35,65 @@ namespace Application.Users
             _jwtProvider = jwtProvider;
         }
 
-        public async Task<string> LoginAsync(LoginRequest loginRequest)
+        public async Task<Result<string, Failure>> LoginAsync(LoginRequest loginRequest)
         {
             // Check email and password
             var validatorResult = await _validatorLogin.ValidateAsync(loginRequest);
 
             if (!validatorResult.IsValid)
             {
-                var errors = validatorResult.Errors.Select(x => Error.Validation(x.ErrorCode, x.ErrorMessage, x.PropertyName)).ToArray();
+                var errors = validatorResult.ToErrors();
 
-                throw new UserValidationException(errors);
+                return errors;
             }
 
-            var user = await _usersRepository.GetByEmailAsync(loginRequest.Email);
+            Result<User?, Failure> emailResult = await _usersRepository.GetByEmailAsync(loginRequest.Email);
 
-            if (user == null)
+            if (emailResult.IsFailure)
             {
-                throw new UserNotFoundException([Errors.Users.UserNotFound()]);
+                return emailResult.Error;
             }
 
-            bool isValidPassword = _passwordHasher.VerifyPassword(loginRequest.Password, user.PasswordHash);
+            if (emailResult.Value is null)
+            {
+                return Errors.Users.UserNotFound().ToFailure();
+            }
+
+            bool isValidPassword = _passwordHasher.VerifyPassword(loginRequest.Password, emailResult.Value.PasswordHash);
 
             if (!isValidPassword)
             {
-                throw new UserIncorrectPasswordException();
+                return Errors.Users.IncorrectPassword().ToFailure();
             }
 
             // create token
 
-            string token = _jwtProvider.GenerateToken(user);
-
+            string token = _jwtProvider.GenerateToken(emailResult.Value);
 
             // save token in the cookie
-
-            
-
             return token;
         }
 
-        public async Task<Guid> RegistrationAsync(RegistrationRequest registrationRequest)
+        public async Task<Result<Guid, Failure>> RegistrationAsync(RegistrationRequest registrationRequest)
         {
             var validatorResult = await _validatorRegistration.ValidateAsync(registrationRequest);
 
             if (!validatorResult.IsValid)
             {
-                var errors = validatorResult.Errors.Select(e => Error.Validation(e.ErrorCode, e.ErrorMessage, e.PropertyName)).ToArray();
-                throw new UserValidationException(errors);
+                var errors = validatorResult.ToErrors();
+                return errors;
             }
 
-            if (await _usersRepository.GetByEmailAsync(registrationRequest.Mail) is not null)
+            Result<User?, Failure> emailResult = await _usersRepository.GetByEmailAsync(registrationRequest.Mail);
+
+            if (emailResult.IsFailure)
             {
-                throw new UserEmailIsBusyException();
+                return emailResult.Error;
+            }
+
+            if (emailResult.Value != null)
+            {
+                return Errors.Users.EmailIsBusy().ToFailure();
             }
 
             string hashedPassword = _passwordHasher.HashPassword(registrationRequest.Password);
@@ -97,9 +107,14 @@ namespace Application.Users
                 PasswordHash = hashedPassword,
             };
 
-            Guid id = await _usersRepository.AddAsync(user);
+            Result<Guid, Failure> addResult = await _usersRepository.AddAsync(user);
 
-            return id;
+            if (addResult.IsFailure)
+            {
+                return addResult.Error;
+            }
+
+            return addResult.Value;
         }
     }
 }
