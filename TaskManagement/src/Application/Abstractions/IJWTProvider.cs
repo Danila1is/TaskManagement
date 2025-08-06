@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaskManagement.Domain.Users;
 
-namespace Application.Users
+namespace TaskManagement.Application.Abstractions
 {
     public interface IJWTProvider
     {

@@ -1,5 +1,4 @@
-﻿using Application.Users;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using Shared;
 using System;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagement.Application.Abstractions;
 using TaskManagement.Domain.Users;
 
 namespace TaskManagement.Infrastructure.PostgreSQL.Repositories

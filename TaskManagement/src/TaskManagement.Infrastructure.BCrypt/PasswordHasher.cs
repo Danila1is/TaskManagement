@@ -1,11 +1,11 @@
-﻿using Application.Users;
-using BCrypt.Net;
+﻿using BCrypt.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagement.Application.Abstractions;
 
 namespace TaskManagement.Infrastructure.Hasher
 {

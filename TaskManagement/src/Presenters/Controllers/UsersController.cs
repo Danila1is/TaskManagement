@@ -8,8 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagement.Application.Abstractions;
+using TaskManagement.Application.Users.Login;
+using TaskManagement.Application.Users.Registration;
 using TaskManagement.Contracts.Users;
 using TaskManagement.Presenters.ResponseExtensions;
 
@@ -19,32 +23,31 @@ namespace Presenters.Controllers
     [Route("[controller]")]
     public class UsersController: ControllerBase
     {
-        private readonly IUsersService _usersService;
 
-        public UsersController(IUsersService usersService)
+        public UsersController()
         {
-            _usersService = usersService;
         }
 
         [HttpPost("registration")]
-        public async Task<IActionResult> Registration([FromBody] RegistrationRequest registrationRequest)
+        public async Task<IActionResult> Registration(
+            [FromBody] RegistrationRequest registrationRequest,
+            [FromServices] ICommandHandler<Guid, RegistrationCommand> handler)
         {
+            var command = new RegistrationCommand(registrationRequest);
 
-            Result<Guid, Failure> result = await _usersService.RegistrationAsync(registrationRequest);
+            Result<Guid, Failure> result = await handler.Handle(command);
 
-            if (result.IsFailure)
-            {
-                return result.Error.ToResponse();
-            }
-
-            return Ok($"{result.Value}");
-
+            return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
+        public async Task<IActionResult> Login(
+            [FromBody] LoginRequest loginRequest,
+            [FromServices] ICommandHandler<string, LoginCommand> handler)
         {
-            Result<string, Failure> result = await _usersService.LoginAsync(loginRequest);
+            LoginCommand command = new LoginCommand(loginRequest);
+
+            Result<string, Failure> result = await handler.Handle(command);
 
             if (result.IsFailure)
             {

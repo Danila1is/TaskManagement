@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagement.Application.Abstractions;
 using TaskManagement.Domain.Users;
 
 namespace TaskManagement.Infrastructure.JWT

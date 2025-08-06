@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaskManagement.Contracts.Users;
 
-namespace Application.Users
+namespace TaskManagement.Application.Users.Login
 {
     public class LoginUserValidator: AbstractValidator<LoginRequest>
     {
